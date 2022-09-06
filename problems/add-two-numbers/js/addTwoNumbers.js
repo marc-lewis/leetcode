@@ -7,48 +7,12 @@
  * @param {number} val
  * @param {ListNode} next
  */
-function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
-}
-
-/**
- * Get the number from a ListNode
- * @param {ListNode} node
- * @returns
- */
-function getNum(node) {
-  let placeValue = 1;
-  let num = 0;
-  let currentNode = node;
-  while(currentNode) {
-      num += (currentNode.val * placeValue);
-      placeValue *= 10;
-      currentNode = currentNode.next;
+ class ListNode {
+  constructor(val, next) {
+    this.val = (val === undefined ? 0 : val);
+    this.next = (next === undefined ? null : next);
   }
-  return num;
 }
-
-/**
- * Yikes
- * @param {number} num
- * @returns {ListNode}
- */
-function nodify (num) {
-  let nodes = []; // mad closure
-  let i = 0;
-  while(num) {
-      const nodeValue = num % 10;
-      num = Math.floor(num / 10);
-      nodes[i] = new ListNode(nodeValue);
-      if(nodes[i - 1]) {
-          nodes[i - 1].next = nodes[i]
-      }
-      i++;
-  }
-  return nodes[0];
-}
-
 
 /**
  * Get the reversed ListNode number from the addition of two ListNodes
@@ -57,6 +21,24 @@ function nodify (num) {
  * @return {ListNode}
  */
 function addTwoNumbers (l1, l2) {
-  const sum = getNum(l1) + getNum(l2);
-  return nodify(sum);
+  let carry = 0;
+  let current = new ListNode(0);
+  let result = current;
+
+  while(l1 || l2 || carry) {
+    const val1 = l1 ? l1.val : 0;
+    const val2 = l2 ? l2.val : 0;
+
+    const sum = val1 + val2 + carry;
+    const nodeValue = sum % 10;
+    carry = sum > 9 ? 1 : 0;
+
+    current.next = new ListNode(nodeValue);
+    current = current.next;
+
+    l1 = l1 ? l1.next : null;
+    l2 = l2 ? l2.next : null;
+  }
+
+  return result.next;
 };
